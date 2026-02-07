@@ -52,7 +52,7 @@ Study hours are allocated proportionally based on this priority score.
 ---
 
 ## Demo Video
-🎥 Demo Video Link: 
+🎥 Demo Video Link: https://drive.google.com/file/d/15jPOubLU5NhaZ_3gZruiXhHXuYEm7fp2/view?usp=sharing
 
 The demo video shows:
 - Program execution
