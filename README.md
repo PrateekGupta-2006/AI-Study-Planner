@@ -1,12 +1,12 @@
 # AI Study Planner for Engineering Students 
 
 ## Problem Statement
-Engineering students face a highly demanding academic environment with multiple complex subjects, varying cognitive loads, prerequisite dependencies, and tight deadlines. Traditional study planning tools such as static timetables or generic to-do apps fail to adapt to subject difficulty, individual confidence levels, and dynamic priorities.
+Engineering students face a highly demanding academic environment with multiple complex subjects, varying cognitive loads, prerequisite dependencies, and tight deadlines. Traditional study planning tools such as static timetables or generic to do apps fail to adapt to subject difficulty, individual confidence levels, and dynamic priorities.
 
 As a result, students often study hard but not smart.
 
 ## Solution
-AI Study Planner is a **console-based, AI-inspired study planning system** designed specifically for engineering students. It intelligently allocates study time across subjects based on credits, weak areas, self-rated confidence levels, and available study hours.
+AI Study Planner is a **console-based, AI inspired study planning system** designed specifically for engineering students. It intelligently allocates study time across subjects based on credits, weak areas, self rated confidence levels, and available study hours.
 
 The system generates:
 - Subject wise study hour allocation
