@@ -1,103 +1,118 @@
-import streamlit as st
-import pandas as pd
-from datetime import datetime
+# AI Study Planner for Engineering Students
 
-st.set_page_config(page_title="AI Study Planner", layout="wide")
+from datetime import date
 
-st.title("📘 AI Study Planner for Engineering Students")
-st.caption("An AI-powered, adaptive study planner for engineering students")
+print("AI STUDY PLANNER FOR ENGINEERING STUDENTS")
+print("=" * 50)
 
-# ---------------- STUDENT DETAILS ----------------
-st.header("👤 Student Details")
-name = st.text_input("Name")
-college = st.text_input("College")
-branch = st.text_input("Branch")
-grad_year = st.text_input("Graduation Year")
-email = st.text_input("Email ID")
+# ================= STUDENT DETAILS =================
+student = {
+    "name": "Aman",
+    "college": "XYZ Institute of Technology",
+    "branch": "Computer Science Engineering",
+    "graduation_year": "2026",
+    "email": "aman@example.com"
+}
 
-# ---------------- SUBJECT INPUT ----------------
-st.header("📚 Subjects")
+# ================= SUBJECT DETAILS =================
+subjects = [
+    {
+        "name": "Data Structures",
+        "credits": 4,
+        "weak_topics": ["Trees", "Graphs"],
+        "confidence": 3
+    },
+    {
+        "name": "Operating Systems",
+        "credits": 3,
+        "weak_topics": ["Deadlocks", "Memory Management"],
+        "confidence": 2
+    },
+    {
+        "name": "Engineering Mathematics",
+        "credits": 4,
+        "weak_topics": ["Laplace Transform"],
+        "confidence": 3
+    }
+]
 
-num_subjects = st.number_input("Number of Subjects", 1, 6, 3)
-subjects = []
+# ================= STUDY AVAILABILITY =================
+weekday_hours = 3
+weekend_hours = 6
+preferred_time = "Night"
+target_completion_date = date(2026, 3, 15)
 
-for i in range(num_subjects):
-    st.subheader(f"Subject {i+1}")
-    subject = st.text_input("Subject Name", key=f"s{i}")
-    credits = st.number_input("Credits", 1, 5, 3, key=f"c{i}")
-    weak = st.text_input("Weak Topics (comma separated)", key=f"w{i}")
-    confidence = st.slider("Confidence Level (1 = Low, 5 = High)", 1, 5, 3, key=f"conf{i}")
+# ================= AI PRIORITIZATION LOGIC =================
+print("\nCalculating AI-based priorities...\n")
 
-    subjects.append({
-        "Subject": subject,
-        "Credits": credits,
-        "WeakTopics": weak,
-        "Confidence": confidence
-    })
+total_weekly_hours = weekday_hours * 5 + weekend_hours * 2
 
-# ---------------- STUDY TIME ----------------
-st.header("⏰ Study Availability")
-weekday = st.number_input("Weekday Study Hours (per day)", 1, 8, 3)
-weekend = st.number_input("Weekend Study Hours (per day)", 1, 12, 6)
-preferred_time = st.selectbox("Preferred Study Time", ["Morning", "Afternoon", "Night"])
-target_date = st.date_input("Target Completion Date")
+total_priority_score = 0
+for subject in subjects:
+    priority_score = (
+        subject["credits"] * 0.4 +
+        (5 - subject["confidence"]) * 0.4 +
+        len(subject["weak_topics"]) * 0.2
+    )
+    subject["priority_score"] = round(priority_score, 2)
+    total_priority_score += priority_score
 
-# ---------------- GENERATE PLAN ----------------
-if st.button("🚀 Generate AI Study Plan"):
-    df = pd.DataFrame(subjects)
-    df["WeakCount"] = df["WeakTopics"].apply(lambda x: len(x.split(",")) if x else 0)
-
-    # AI Priority Formula
-    df["PriorityScore"] = (
-        df["Credits"] * 0.4 +
-        (5 - df["Confidence"]) * 0.4 +
-        df["WeakCount"] * 0.2
+# Allocate hours
+for subject in subjects:
+    subject["allocated_hours"] = round(
+        (subject["priority_score"] / total_priority_score) * total_weekly_hours, 2
     )
 
-    total_score = df["PriorityScore"].sum()
-    weekly_hours = weekday * 5 + weekend * 2
-    df["AllocatedHours"] = (df["PriorityScore"] / total_score) * weekly_hours
-    df = df.sort_values(by="PriorityScore", ascending=False)
+# Sort subjects by priority
+subjects.sort(key=lambda x: x["priority_score"], reverse=True)
 
-    st.header("📊 Subject-wise Allocation")
-    st.dataframe(df[["Subject", "Credits", "Confidence", "AllocatedHours"]])
+# ================= OUTPUT =================
+print("SUBJECT-WISE STUDY ALLOCATION (PER WEEK)")
+print("-" * 50)
 
-    # ---------------- WEEKLY PLAN ----------------
-    st.header("📆 Weekly Study Plan")
-    days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    schedule = []
+for subject in subjects:
+    print(f"""
+Subject: {subject['name']}
+Credits: {subject['credits']}
+Confidence Level: {subject['confidence']}/5
+Weak Topics: {', '.join(subject['weak_topics'])}
+Allocated Study Hours: {subject['allocated_hours']} hrs/week
+""")
 
-    for i, day in enumerate(days):
-        subject = df.iloc[i % len(df)]
-        schedule.append({
-            "Day": day,
-            "Subject": subject["Subject"],
-            "Focus": "Weak Topics & Practice" if subject["Confidence"] <= 3 else "Revision",
-            "Study Time": preferred_time
-        })
+# ================= WEEKLY STUDY PLAN =================
+print("\nWEEKLY STUDY PLAN")
+print("-" * 50)
 
-    st.table(pd.DataFrame(schedule))
+days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
-    # ---------------- INSIGHTS ----------------
-    st.header("✅ Actionable Insights")
-    for _, row in df.iterrows():
-        if row["Confidence"] <= 2:
-            st.warning(f"Focus early on **{row['Subject']}** due to low confidence.")
-        elif row["Confidence"] >= 4:
-            st.success(f"Reduce load for **{row['Subject']}** to avoid over-studying.")
+for i, day in enumerate(days):
+    subject = subjects[i % len(subjects)]
+    focus = "Weak Topics & Practice" if subject["confidence"] <= 3 else "Revision"
+    print(f"{day}: {subject['name']} ({focus}) – {preferred_time}")
 
-    # ---------------- NEXT STEPS ----------------
-    st.header("📍 Next 7 Days Focus")
-    for _, row in df.head(2).iterrows():
-        st.info(f"Work on weak areas of **{row['Subject']}** first.")
+# ================= ACTIONABLE INSIGHTS =================
+print("\nACTIONABLE INSIGHTS")
+print("-" * 50)
 
-    # ---------------- SUMMARY ----------------
-    st.header("🎯 Outcome Summary")
-    st.markdown(f"""
-    - Target Completion Date: **{target_date}**
-    - Weekly Study Hours: **{weekly_hours} hrs**
-    - Expected Confidence Improvement: **+1 to +2 levels**
-    - Reduced Last-Minute Stress: **Yes**
-    """)
+for subject in subjects:
+    if subject["confidence"] <= 2:
+        print(f"- Focus early on {subject['name']} due to low confidence.")
+    elif subject["confidence"] >= 4:
+        print(f"- Reduce over-studying for {subject['name']} and focus on revision.")
 
-    st.success("AI Study Plan Generated Successfully 🎉")
+# ================= NEXT 7 DAYS =================
+print("\nNEXT 7 DAYS FOCUS")
+print("-" * 50)
+
+for subject in subjects[:2]:
+    print(f"- Prioritize weak topics in {subject['name']}")
+
+# ================= SUMMARY =================
+print("\nOUTCOME SUMMARY")
+print("-" * 50)
+print(f"Target Completion Date: {target_completion_date}")
+print(f"Total Weekly Study Hours: {total_weekly_hours} hrs")
+print("Expected Confidence Improvement: +1 to +2 levels")
+print("Reduced Last-Minute Stress: YES")
+
+print("\nAI Study Plan Generated Successfully!")
