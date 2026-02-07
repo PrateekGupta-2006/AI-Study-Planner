@@ -1,4 +1,4 @@
-# AI Study Planner for Engineering Students 🤖📘
+# AI Study Planner for Engineering Students 
 
 ## Problem
 Engineering students struggle to balance multiple complex subjects with varying difficulty levels, prerequisites, and deadlines. Traditional planners are static and fail to adapt to confidence levels and cognitive load.
