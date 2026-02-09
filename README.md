@@ -49,22 +49,10 @@ Study hours are allocated proportionally based on this priority score.
 - Rule based AI prioritization logic
 - Console based execution (no external dependencies)
 
----
-
-## Demo Video
-🎥 Demo Video Link: https://drive.google.com/file/d/15jPOubLU5NhaZ_3gZruiXhHXuYEm7fp2/view?usp=sharing
-
-The demo video shows:
-- Program execution
-- Generated study plan
-- Explanation of AI logic and impact
-
----
-
 ## How to Run the Project
 1. Ensure Python is installed
 2. Clone the repository
-3. Run the following command:
+3. Run the command
 
 ```bash
 python app.py
